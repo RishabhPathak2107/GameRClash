@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">GAMER CLASH</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="REFER"><u>REFER</u></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_web_client_id">217598476407-l2h66rtbf7u8tlcu1giupr7o576sa1n3.apps.googleusercontent.com</string>
+</resources>

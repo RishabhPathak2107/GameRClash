@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <!-- Sender name -->
+    <TextView
+        android:id="@+id/senderName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textStyle="bold"
+        android:textColor="#FF5722"
+        android:textSize="14sp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="2dp"/>
+
+    <!-- Message text -->
+    <TextView
+        android:id="@+id/messageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message text here"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:padding="8dp"
+        android:background="@drawable/chat_bubble_bg" />
+</LinearLayout>

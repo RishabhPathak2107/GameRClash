@@ -1,0 +1,16 @@
+package com.tournaments.tuskesport;
+
+import android.app.Application;
+
+import com.onesignal.OneSignal;
+
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        // ✅ Initialize OneSignal once globally
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId("44d8c7c0-32a3-46d6-aaf5-81a162845d36"); // Replace with your real App ID
+    }
+}

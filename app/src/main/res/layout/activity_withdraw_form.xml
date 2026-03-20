@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_card_bg"
+        android:orientation="vertical">
+
+        <!-- Card-like container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:elevation="4dp"
+            android:orientation="vertical">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Withdraw Request"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Amount Display -->
+            <TextView
+                android:id="@+id/withdrawAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Amount: ₹50"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Coin Info -->
+            <TextView
+                android:id="@+id/coinValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Coins: 50"
+                android:textSize="16sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Input Field -->
+            <EditText
+                android:id="@+id/inputField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your UPI ID or Email"
+                android:background="@drawable/input_background"
+                android:padding="14dp"
+                android:textColorHint="#696969"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:layout_marginBottom="28dp" />
+
+            <!-- Submit Button -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit Request"
+                android:backgroundTint="#D32F2F"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:padding="14dp"
+                android:background="@drawable/button_background"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

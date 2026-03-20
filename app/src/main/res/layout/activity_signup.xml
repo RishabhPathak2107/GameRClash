@@ -1,0 +1,249 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:background="#10001C">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="10dp"
+            android:text="Welcome to,\nGameRClash"
+            android:textColor="#FFFFFF"
+            android:textSize="26dp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="SIGN UP TO ENTER THE REAL WORLD OF ESPORTS"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
+
+        <!-- First Name -->
+        <EditText
+            android:id="@+id/firstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="First Name"
+            android:paddingLeft="16dp"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
+            android:background="@drawable/rounded_edittext"
+            android:textColorHint="#999999"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Last Name -->
+        <EditText
+            android:id="@+id/lastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Last Name"
+            android:paddingLeft="16dp"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
+            android:background="@drawable/rounded_edittext"
+            android:textColorHint="#999999"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Username -->
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:paddingLeft="16dp"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
+            android:background="@drawable/rounded_edittext"
+            android:textColorHint="#999999"
+            android:textColor="#000000"
+            android:capitalize="characters"
+            android:textSize="14dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Phone Number with Country Code -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="🇮🇳  +91"
+                android:textColor="#000000"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/mobile"
+                android:layout_marginLeft="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:background="@drawable/rounded_edittext"
+                android:layout_height="match_parent"
+                android:hint="Phone number"
+                android:paddingLeft="16dp"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
+                android:textColorHint="#999999"
+                android:textColor="#000000"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <!-- Email -->
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:paddingLeft="16dp"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
+            android:background="@drawable/rounded_edittext"
+            android:textColorHint="#999999"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Password with Show -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/rounded_edittext">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Password"
+                android:paddingLeft="16dp"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
+                android:textColorHint="#999999"
+                android:textColor="#000000"
+                android:textSize="14dp"
+                android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/tvShowPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show"
+                android:textColor="#8000FF"
+                android:textSize="14dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"/>
+        </RelativeLayout>
+
+        <!-- Promo Code + Apply -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/rounded_edittext">
+
+            <EditText
+                android:id="@+id/referCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Promo Code (Optional)"
+                android:paddingLeft="16dp"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
+                android:textColorHint="#999999"
+                android:textColor="#000000"
+                android:textSize="14dp"
+                android:background="@android:color/transparent"
+                android:paddingEnd="80dp"/>
+
+        </RelativeLayout>
+
+        <!-- Terms & Conditions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="By Registering, I agree to Gampley's\nTerms and Conditions and Privacy Policy"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="12dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Sign Up Button -->
+        <TextView
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="SIGN UP"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:background="@drawable/btn_purple_rounded"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Already have account -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? "
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/btnLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:textColor="#FF9800"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="46dp" />
+
+        <!-- OR Signup with -->
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="or SignUp with"
+            android:textColor="#FFFFFF"
+            android:textSize="14dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Google Button -->
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/google_icon"
+            android:background="@drawable/round_white_circle"
+            android:padding="8dp"
+            android:layout_marginBottom="50dp"/>
+
+    </LinearLayout>
+</ScrollView>
