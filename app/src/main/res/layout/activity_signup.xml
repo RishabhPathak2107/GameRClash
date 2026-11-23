@@ -3,7 +3,8 @@
     android:id="@+id/main"
     android:layout_height="match_parent"
     android:scrollbars="none"
-    android:background="#10001C">
+    android:background="#10001C"
+    android:importantForAutofill="noExcludeDescendants">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,6 +69,7 @@
             android:paddingLeft="16dp"
             android:paddingBottom="13dp"
             android:paddingTop="13dp"
+            android:autofillHints="username"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#999999"
             android:textColor="#000000"
@@ -95,19 +97,20 @@
 
             <EditText
                 android:id="@+id/mobile"
-                android:layout_marginLeft="10dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:inputType="number"
-                android:background="@drawable/rounded_edittext"
                 android:layout_height="match_parent"
+                android:inputType="phone"
+                android:autofillHints=""
+                android:importantForAutofill="no"
+                android:background="@drawable/rounded_edittext"
                 android:hint="Phone number"
                 android:paddingLeft="16dp"
                 android:paddingBottom="13dp"
                 android:paddingTop="13dp"
                 android:textColorHint="#999999"
                 android:textColor="#000000"
-                android:textSize="14dp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Email -->
@@ -116,14 +119,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:autofillHints="emailAddress"
+            android:importantForAutofill="yes"
             android:paddingLeft="16dp"
             android:paddingBottom="13dp"
             android:paddingTop="13dp"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#999999"
             android:textColor="#000000"
-            android:textSize="14dp"
-            android:layout_marginBottom="12dp"/>
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp" />
 
         <!-- Password with Show -->
         <RelativeLayout
@@ -149,7 +155,7 @@
                 android:id="@+id/tvShowPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show"
+                android:text="HIDE"
                 android:textColor="#8000FF"
                 android:textSize="14dp"
                 android:layout_alignParentEnd="true"

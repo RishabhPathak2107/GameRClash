@@ -51,21 +51,6 @@
             android:name=".leaderboard"
             android:exported="false" />
         <activity
-            android:name=".clash_squad"
-            android:exported="false" />
-        <activity
-            android:name=".clash_squad2"
-            android:exported="false" />
-        <activity
-            android:name=".lone_wolf2"
-            android:exported="false" />
-        <activity
-            android:name=".lone_wolf"
-            android:exported="false" />
-        <activity
-            android:name=".survival"
-            android:exported="false" />
-        <activity
             android:name=".result"
             android:exported="false" />
         <activity
@@ -94,7 +79,13 @@
             android:exported="false" />
         <activity
             android:name=".login"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".wallet"
             android:exported="false" />
@@ -108,19 +99,10 @@
             android:name=".AddMoney"
             android:exported="false" />
         <activity
-            android:name=".bonus_match"
-            android:exported="false" />
-        <activity
             android:name=".signup"
             android:colorMode="hdr"
-            android:exported="true"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

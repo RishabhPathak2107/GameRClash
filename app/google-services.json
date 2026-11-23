@@ -1,21 +1,22 @@
 {
   "project_info": {
-    "project_number": "217598476407",
-    "project_id": "tuck-esport",
-    "storage_bucket": "tuck-esport.firebasestorage.app"
+    "project_number": "885784629076",
+    "firebase_url": "https://gamerclash-80de3-default-rtdb.firebaseio.com",
+    "project_id": "gamerclash-80de3",
+    "storage_bucket": "gamerclash-80de3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:217598476407:android:3014c68991b73bf9b6c672",
+        "mobilesdk_app_id": "1:885784629076:android:9c9f098c259a32d14902c1",
         "android_client_info": {
-          "package_name": "com.tournaments.tuskesport"
+          "package_name": "com.tournaments.gamerclash"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCjk_9rTKcn5SGALQueXysWCHJIOYdTLB8"
+          "current_key": "AIzaSyA_QfcqHL7jlQsShUqY-FrQuHsC67L-wos"
         }
       ],
       "services": {

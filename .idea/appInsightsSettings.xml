@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.tournaments.tuskesport" />
-                  <option name="mobileSdkAppId" value="1:217598476407:android:3014c68991b73bf9b6c672" />
-                  <option name="projectId" value="tuck-esport" />
-                  <option name="projectNumber" value="217598476407" />
+                  <option name="appId" value="com.tournaments.gamerclash" />
+                  <option name="mobileSdkAppId" value="1:885784629076:android:9c9f098c259a32d14902c1" />
+                  <option name="projectId" value="gamerclash-80de3" />
+                  <option name="projectNumber" value="885784629076" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

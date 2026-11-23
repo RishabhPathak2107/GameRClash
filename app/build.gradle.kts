@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.tournaments.tuskesport"
-    compileSdk = 35
+    namespace = "com.tournaments.gamerclash"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.tournaments.tuskesport"
+        applicationId = "com.tournaments.gamerclash"
         minSdk = 29
         targetSdk = 35
         versionCode = 1
@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.activity.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)

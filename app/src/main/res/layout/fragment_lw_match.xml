@@ -5,6 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#031d38"
+    android:background="@color/colorDarkBlue"
     tools:context=".BR_MatchFragment">
 </androidx.recyclerview.widget.RecyclerView>

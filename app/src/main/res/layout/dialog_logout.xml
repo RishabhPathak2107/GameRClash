@@ -11,7 +11,7 @@
         android:id="@+id/title"
         android:text="Confirm Logout"
         android:textSize="18sp"
-        android:textColor="#031d38"
+        android:textColor="@color/colorDarkBlue"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"

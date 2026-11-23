@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#031d38"
+        android:background="@color/colorDarkBlue"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="IMP UPDATES"
+                android:text="NOTIFICATIONS"
                 android:textSize="14dp"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/white"
@@ -43,13 +43,11 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:background="#121212"
-        android:paddingBottom="16dp"/>
+        android:background="@color/colorDarkBlue"
+        android:padding="8dp"/>
 
 </LinearLayout>

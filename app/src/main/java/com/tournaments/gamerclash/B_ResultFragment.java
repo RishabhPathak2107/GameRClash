@@ -1,0 +1,87 @@
+package com.tournaments.gamerclash;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.tournaments.gamerclash.Adapters.ResultAdapter;
+import com.tournaments.gamerclash.Models.Result_model;
+
+import java.util.ArrayList;
+
+public class B_ResultFragment extends Fragment {
+
+    RecyclerView recyclerView;
+    ResultAdapter resultAdapter;
+    ArrayList<Result_model> list;
+    String category = "Bonus Match";
+
+    public B_ResultFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_cs_result, container, false);
+
+        recyclerView = view.findViewById(R.id.recycleView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        list = new ArrayList<>();
+        resultAdapter = new ResultAdapter(list, getContext(), category); // or "Clash Squad"
+        recyclerView.setAdapter(resultAdapter);
+
+        // Step 1: Get all match IDs from Results/Battle Royale
+        FirebaseDatabase.getInstance().getReference()
+                .child("Results").child(category)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list.clear();
+                        for (DataSnapshot matchSnapshot : snapshot.getChildren()) {
+                            String matchId = matchSnapshot.getKey();
+                            Boolean isVisible = matchSnapshot.getValue(Boolean.class);
+
+                            if (isVisible != null && isVisible) {
+                                fetchMatchData(matchId);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+
+        return view;
+    }
+
+    // Step 2: Get match data from All_Matches/matchId
+    private void fetchMatchData(String matchId) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("All_Matches").child(matchId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Result_model model = snapshot.getValue(Result_model.class);
+                        if (model != null) {
+                            list.add(model);
+                            resultAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+    }
+}
