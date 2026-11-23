@@ -169,8 +169,8 @@ public class signup extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot referSnapshot) {
                                 if (referSnapshot.exists()) {
-                                    // Valid refer code mila, bonus 5 set karo
-                                    createAccount(fname, lname, mail, pass, uname, phoneNumber, referCode, 5);
+                                    // Valid refer code mila, no bonus on signup
+                                    createAccount(fname, lname, mail, pass, uname, phoneNumber, referCode, 0);
                                 } else {
                                     dialog.dismiss();
                                     referCodeInput.setError("Invalid refer code");
@@ -221,29 +221,6 @@ public class signup extends AppCompatActivity {
                         if (task1.isSuccessful()) {
                             db.child("refer").child(username).setValue(uid).addOnCompleteListener(task2 -> {
                                 if (task2.isSuccessful()) {
-
-                                    // 👉 ADD WALLET TRANSACTION FOR BONUS
-                                    if (bonus > 0) {
-                                        long timestamp = System.currentTimeMillis();
-
-                                        // Format the date as "dd-MM-yyyy"
-                                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
-                                        String date = sdf.format(new java.util.Date(timestamp));
-
-                                        // Generate a simple transaction ID
-                                        String txnId = generateTxnId();
-
-                                        HashMap<String, Object> txn = new HashMap<>();
-                                        txn.put("amount", String.valueOf(bonus));
-                                        txn.put("date", date);
-                                        txn.put("id", txnId);
-                                        txn.put("reason", "Sign Up Bonus");
-                                        txn.put("status", "success");
-
-                                        db.child("transactions").child(uid).child(String.valueOf(timestamp)).setValue(txn);
-                                    }
-
-
                                     dialog.dismiss();
                                     Toast.makeText(signup.this, "Signup successful.", Toast.LENGTH_LONG).show();
 

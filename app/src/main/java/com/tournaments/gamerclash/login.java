@@ -178,7 +178,7 @@ public class login extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
-                            giveReferBonusIfEligible();
+                            fetchUserDataAndProceed();
                         }
                     } else {
                         dialog.dismiss();
@@ -193,92 +193,12 @@ public class login extends AppCompatActivity {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        giveReferBonusIfEligible();
+                        fetchUserDataAndProceed();
                     } else {
                         dialog.dismiss();
                         Toast.makeText(login.this, "Firebase Auth Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void giveReferBonusIfEligible() {
-        if (auth.getCurrentUser() == null) {
-            dialog.dismiss();
-            return;
-        }
-        String uid = auth.getCurrentUser().getUid();
-        DatabaseReference userRef = db.child("users").child(uid);
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()) {
-                    dialog.dismiss();
-                    Toast.makeText(login.this, "User data not found", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String referBy = snapshot.child("referby").getValue(String.class);
-                if (TextUtils.isEmpty(referBy)) {
-                    fetchUserDataAndProceed();
-                    return;
-                }
-
-                db.child("users").orderByChild("username").equalTo(referBy)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot refSnapshot) {
-                                if (refSnapshot.exists()) {
-                                    for (DataSnapshot refUser : refSnapshot.getChildren()) {
-                                        String refUid = refUser.getKey();
-                                        Long refBonus = refUser.child("bonus").getValue(Long.class);
-                                        if (refBonus == null) refBonus = 0L;
-
-                                        long bonusAmount = 5;
-                                        long timestamp = System.currentTimeMillis();
-
-                                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                                        String date = sdf.format(new Date(timestamp));
-                                        String txnId = generateTxnId();
-
-                                        com.tournaments.gamerclash.Models.txnModel txnModel = new com.tournaments.gamerclash.Models.txnModel(
-                                                date, "Refer Bonus", String.valueOf(bonusAmount), txnId, "success");
-
-                                        if (refUid != null) {
-                                            db.child("users").child(refUid).child("bonus").setValue(refBonus + bonusAmount);
-                                            db.child("transactions").child(refUid).child(String.valueOf(timestamp)).setValue(txnModel);
-                                        }
-                                        break;
-                                    }
-                                }
-                                userRef.child("referby").removeValue();
-                                fetchUserDataAndProceed();
-                            }
-
-                            private String generateTxnId() {
-                                String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                                StringBuilder txnId = new StringBuilder();
-                                Random random = new Random();
-                                for (int i = 0; i < 6; i++) {
-                                    txnId.append(chars.charAt(random.nextInt(chars.length())));
-                                }
-                                return txnId.toString();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                dialog.dismiss();
-                                Toast.makeText(login.this, "Refer check failed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                dialog.dismiss();
-                Toast.makeText(login.this, "User check failed", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void fetchUserDataAndProceed() {

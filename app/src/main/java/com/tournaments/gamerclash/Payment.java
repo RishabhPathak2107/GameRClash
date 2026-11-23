@@ -2,6 +2,7 @@ package com.tournaments.gamerclash;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import com.tournaments.gamerclash.Models.txnModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class Payment extends AppCompatActivity {
 
@@ -112,6 +114,9 @@ public class Payment extends AppCompatActivity {
                                     String payAmount = amount != null ? amount : "0";
                                     addTransactionToFirebase(uid, payAmount, "Add Money Request", utr, "Pending");
 
+                                    // Check and reward referrer with ₹5 deposited cash
+                                    checkAndRewardReferrer(uid);
+
                                     Toast.makeText(Payment.this, "UTR ID Submitted Successfully!", Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
@@ -162,5 +167,83 @@ public class Payment extends AppCompatActivity {
 
         txnModel model = new txnModel(date, reason, amount, txnId, status);
         ref.child(txnId).setValue(model);
+    }
+
+    private void checkAndRewardReferrer(String currentUserId) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUserId);
+        userRef.child("referby").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getValue(String.class) != null) {
+                    String referrerUsername = snapshot.getValue(String.class);
+                    if (!TextUtils.isEmpty(referrerUsername)) {
+                        FirebaseDatabase.getInstance().getReference("refer").child(referrerUsername)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot referSnap) {
+                                        if (referSnap.exists() && referSnap.getValue(String.class) != null) {
+                                            String referrerUid = referSnap.getValue(String.class);
+                                            creditReferrerReward(referrerUid);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {}
+                                });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private void creditReferrerReward(String referrerUid) {
+        DatabaseReference referrerRef = FirebaseDatabase.getInstance().getReference("users").child(referrerUid);
+        referrerRef.child("deposit").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double currentDeposit = 0.0;
+                if (snapshot.exists()) {
+                    try {
+                        if (snapshot.getValue(Double.class) != null) {
+                            currentDeposit = snapshot.getValue(Double.class);
+                        } else if (snapshot.getValue(Long.class) != null) {
+                            currentDeposit = snapshot.getValue(Long.class).doubleValue();
+                        } else if (snapshot.getValue(Integer.class) != null) {
+                            currentDeposit = snapshot.getValue(Integer.class).doubleValue();
+                        }
+                    } catch (Exception e) {
+                        currentDeposit = 0.0;
+                    }
+                }
+
+                double newDeposit = currentDeposit + 5.0;
+                referrerRef.child("deposit").setValue(Math.round(newDeposit * 100.0) / 100.0);
+
+                // Add transaction for referrer with reason "Referred Money"
+                DatabaseReference txnRef = FirebaseDatabase.getInstance().getReference("transactions").child(referrerUid);
+                String timestampKey = String.valueOf(System.currentTimeMillis());
+                String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                String txnId = generateRandomTxnId(6);
+
+                txnModel model = new txnModel(date, "Referred Money", "5", txnId, "success");
+                txnRef.child(timestampKey).setValue(model);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
+    private String generateRandomTxnId(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder txnId = new StringBuilder();
+        Random rand = new Random();
+        for (int i = 0; i < length; i++) {
+            txnId.append(chars.charAt(rand.nextInt(chars.length())));
+        }
+        return txnId.toString();
     }
 }
