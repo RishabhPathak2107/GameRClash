@@ -171,27 +171,41 @@ public class Payment extends AppCompatActivity {
 
     private void checkAndRewardReferrer(String currentUserId) {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUserId);
-        userRef.child("referby").addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.child("referBonusPaid").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists() && snapshot.getValue(String.class) != null) {
-                    String referrerUsername = snapshot.getValue(String.class);
-                    if (!TextUtils.isEmpty(referrerUsername)) {
-                        FirebaseDatabase.getInstance().getReference("refer").child(referrerUsername)
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot referSnap) {
-                                        if (referSnap.exists() && referSnap.getValue(String.class) != null) {
-                                            String referrerUid = referSnap.getValue(String.class);
-                                            creditReferrerReward(referrerUid);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {}
-                                });
-                    }
+            public void onDataChange(@NonNull DataSnapshot paidSnapshot) {
+                boolean alreadyPaid = paidSnapshot.exists() && Boolean.TRUE.equals(paidSnapshot.getValue(Boolean.class));
+                if (alreadyPaid) {
+                    return;
                 }
+
+                userRef.child("referby").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists() && snapshot.getValue(String.class) != null) {
+                            String referrerUsername = snapshot.getValue(String.class);
+                            if (!TextUtils.isEmpty(referrerUsername)) {
+                                FirebaseDatabase.getInstance().getReference("refer").child(referrerUsername)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot referSnap) {
+                                                if (referSnap.exists() && referSnap.getValue(String.class) != null) {
+                                                    String referrerUid = referSnap.getValue(String.class);
+                                                    userRef.child("referBonusPaid").setValue(true);
+                                                    creditReferrerReward(referrerUid);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {}
+                                        });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
             }
 
             @Override
