@@ -2,8 +2,8 @@ package com.tournaments.gamerclash;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -30,7 +30,7 @@ public class chatMessage extends AppCompatActivity {
 
     RecyclerView recyclerView;
     EditText messageInput;
-    Button sendButton;
+    ImageButton sendButton;
     Toolbar toolbar;
     ChatAdapter adapter;
     List<chatModel> messageList;
@@ -49,9 +49,7 @@ public class chatMessage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_message);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
 
         toolbar = findViewById(R.id.toolbar);
         if (getSupportActionBar() != null) getSupportActionBar().hide();

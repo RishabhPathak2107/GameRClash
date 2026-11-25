@@ -34,16 +34,20 @@ public class ForgotPassActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter your registered email", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Reset link sent to your email.", Toast.LENGTH_LONG).show();
-                            finish(); // optional: close screen
-                        } else {
-                            Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+            try {
+                auth.sendPasswordResetEmail(email)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(this, "Reset link sent to your email.", Toast.LENGTH_LONG).show();
+                                finish(); // optional: close screen
+                            } else {
+                                Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+            }
+            catch(Exception e) {
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
     }
 }

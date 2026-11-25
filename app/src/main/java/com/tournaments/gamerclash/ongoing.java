@@ -39,9 +39,7 @@ public class ongoing extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ongoing);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
 
         if (getSupportActionBar() != null) getSupportActionBar().hide();
 

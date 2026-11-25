@@ -365,62 +365,45 @@ public class details extends AppCompatActivity {
             return;
         }
 
-        double usedBonus = 0.0;
+        boolean isBonusMatch = (matchCategory != null && matchCategory.equalsIgnoreCase("Bonus Match"));
+        double maxBonusAllowed = isBonusMatch ? (requiredFee * 0.80) : (requiredFee * 0.20);
+
+        if (isBonusMatch && bonusCash < maxBonusAllowed) {
+            Toast.makeText(details.this, "Insufficient bonus balance", Toast.LENGTH_SHORT).show();
+            joinButton.setEnabled(true);
+            return;
+        }
+
+        double usedBonus = Math.min(bonusCash, maxBonusAllowed);
+        double remainingAfterBonus = requiredFee - usedBonus;
+
+        if ((depositedCash + winningsCash) < remainingAfterBonus) {
+            Toast.makeText(details.this, "Insufficient balance", Toast.LENGTH_SHORT).show();
+            joinButton.setEnabled(true);
+            return;
+        }
+
         double usedDeposit = 0.0;
         double usedWinnings = 0.0;
-
         double newDeposit = depositedCash;
         double newWinnings = winningsCash;
-        double newBonus = bonusCash;
+        double newBonus = bonusCash - usedBonus;
 
-        if (matchCategory != null && matchCategory.equalsIgnoreCase("Bonus Match")) {
-            double bonusShare = requiredFee * 0.80;
-            double cashShare = requiredFee * 0.20;
-
-            if (bonusCash < bonusShare) {
-                Toast.makeText(details.this, "Insufficient bonus balance", Toast.LENGTH_SHORT).show();
-                joinButton.setEnabled(true);
-                return;
-            }
-
-            if ((depositedCash + winningsCash) < cashShare) {
-                Toast.makeText(details.this, "Not enough deposited/winnings balance", Toast.LENGTH_SHORT).show();
-                joinButton.setEnabled(true);
-                return;
-            }
-
-            usedBonus = bonusShare;
-            newBonus = bonusCash - bonusShare;
-
-            if (depositedCash >= cashShare) {
-                usedDeposit = cashShare;
-                usedWinnings = 0.0;
-                newDeposit = depositedCash - cashShare;
-            } else {
-                usedDeposit = depositedCash;
-                usedWinnings = cashShare - depositedCash;
-                newDeposit = 0.0;
-                newWinnings = winningsCash - usedWinnings;
-            }
+        if (depositedCash >= remainingAfterBonus) {
+            usedDeposit = remainingAfterBonus;
+            usedWinnings = 0.0;
+            newDeposit = depositedCash - remainingAfterBonus;
         } else {
-            double remainingFee = requiredFee;
+            usedDeposit = depositedCash;
+            double remainingNeeded = remainingAfterBonus - depositedCash;
+            usedWinnings = remainingNeeded;
+            newDeposit = 0.0;
+            newWinnings = winningsCash - remainingNeeded;
 
-            if (depositedCash >= remainingFee) {
-                usedDeposit = remainingFee;
-                usedWinnings = 0.0;
-                newDeposit = depositedCash - remainingFee;
-            } else {
-                usedDeposit = depositedCash;
-                usedWinnings = remainingFee - depositedCash;
-                newDeposit = 0.0;
-
-                if (winningsCash >= usedWinnings) {
-                    newWinnings = winningsCash - usedWinnings;
-                } else {
-                    Toast.makeText(details.this, "Insufficient balance", Toast.LENGTH_SHORT).show();
-                    joinButton.setEnabled(true);
-                    return;
-                }
+            if (newWinnings < 0) {
+                Toast.makeText(details.this, "Insufficient balance", Toast.LENGTH_SHORT).show();
+                joinButton.setEnabled(true);
+                return;
             }
         }
 
@@ -549,9 +532,7 @@ public class details extends AppCompatActivity {
         Map<String, Object> updates = new HashMap<>();
         updates.put("/users/" + userId + "/deposit", roundToTwoDecimals(newDeposit));
         updates.put("/users/" + userId + "/winnings", roundToTwoDecimals(newWinnings));
-        if (matchCategory != null && matchCategory.equalsIgnoreCase("Bonus Match")) {
-            updates.put("/users/" + userId + "/bonus", roundToTwoDecimals(newBonus));
-        }
+        updates.put("/users/" + userId + "/bonus", roundToTwoDecimals(newBonus));
         updates.put("/users/" + userId + "/joinedMatchIds/" + matchId, true);
 
         FirebaseDatabase.getInstance().getReference().updateChildren(updates)

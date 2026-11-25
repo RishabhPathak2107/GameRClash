@@ -42,7 +42,7 @@ public class battle_royale extends AppCompatActivity {
         if (category == null) category = "Battle Royale";
 
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> onBackPressed());
+        back_btn.setOnClickListener(v -> finish());
 
         tab = findViewById(R.id.tab);
         viewPager = findViewById(R.id.viewPager);

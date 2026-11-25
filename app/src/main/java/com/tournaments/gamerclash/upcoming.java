@@ -37,9 +37,7 @@ public class upcoming extends AppCompatActivity {
         setContentView(R.layout.activity_upcoming);
         toolbar = findViewById(R.id.toolbar);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
         int statusBarHeight = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {

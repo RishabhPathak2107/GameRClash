@@ -37,9 +37,7 @@ public class wallet extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wallet);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
 
         // Initialize views
         totalBalance = findViewById(R.id.totalBalance);

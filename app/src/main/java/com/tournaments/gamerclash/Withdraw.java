@@ -37,9 +37,7 @@ public class Withdraw extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdraw);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
 
         recyclerView = findViewById(R.id.recyclerViewWithdraw);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

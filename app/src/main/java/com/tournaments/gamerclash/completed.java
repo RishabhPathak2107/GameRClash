@@ -39,9 +39,7 @@ public class completed extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_completed);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
         getSupportActionBar().hide();
 
         toolbar = findViewById(R.id.toolbar);

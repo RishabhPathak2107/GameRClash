@@ -31,9 +31,7 @@ public class AddMoney extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_money);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
 
         recyclerView = findViewById(R.id.recyclerViewAddMoney);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

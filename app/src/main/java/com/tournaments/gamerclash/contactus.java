@@ -37,9 +37,7 @@ public class contactus extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_contactus);
         back_btn = findViewById(R.id.back_button);
-        back_btn.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        back_btn.setOnClickListener(v -> finish());
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }

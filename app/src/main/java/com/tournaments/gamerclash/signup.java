@@ -100,7 +100,7 @@ public class signup extends AppCompatActivity {
         String pass = password.getText().toString().trim();
         String uname = username.getText().toString().trim().toUpperCase();
         String phoneNumber = phone.getText().toString().trim();
-        String referCode = referCodeInput.getText().toString().trim();
+        String referCode = referCodeInput.getText().toString().trim().toUpperCase();
 
         if (TextUtils.isEmpty(fname) || fname.length() < 3) {
             firstName.setError("Enter valid first name");
@@ -221,6 +221,24 @@ public class signup extends AppCompatActivity {
                         if (task1.isSuccessful()) {
                             db.child("refer").child(username).setValue(uid).addOnCompleteListener(task2 -> {
                                 if (task2.isSuccessful()) {
+
+                                    // 👉 ADD WALLET TRANSACTION FOR BONUS
+                                    if (bonus > 0) {
+                                        long timestamp = System.currentTimeMillis();
+
+                                        // Format the date as "dd-MM-yyyy"
+                                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault());
+                                        String date = sdf.format(new java.util.Date(timestamp));
+
+                                        // Generate a simple transaction ID
+                                        String txnId = generateTxnId();
+
+                                        com.tournaments.gamerclash.Models.txnModel txnModel = new com.tournaments.gamerclash.Models.txnModel(
+                                                date, "Sign Up Bonus", String.valueOf(bonus), txnId, "success");
+
+                                        db.child("transactions").child(uid).child(String.valueOf(timestamp)).setValue(txnModel);
+                                    }
+
                                     dialog.dismiss();
                                     Toast.makeText(signup.this, "Signup successful.", Toast.LENGTH_LONG).show();
 
