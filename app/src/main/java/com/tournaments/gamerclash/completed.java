@@ -1,8 +1,9 @@
 package com.tournaments.gamerclash;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +31,8 @@ public class completed extends AppCompatActivity {
     ResultAdapter mAdapter;
     ArrayList<Result_model> matchList = new ArrayList<>();
     Set<String> joinedMatchIds = new HashSet<>();
+    SwipeRefreshLayout swipeRefresh;
+    TextView emptyView;
     Toolbar toolbar;
     ImageView back_btn;
 
@@ -50,7 +54,13 @@ public class completed extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        swipeRefresh = findViewById(R.id.swipeRefresh);
+        emptyView = findViewById(R.id.emptyView);
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            loadCompletedData();
+            swipeRefresh.setRefreshing(false);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -58,6 +68,11 @@ public class completed extends AppCompatActivity {
             return insets;
         });
 
+        loadCompletedData();
+    }
+
+    private void loadCompletedData() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
             DatabaseReference joinedRef = FirebaseDatabase.getInstance().getReference()
@@ -120,14 +135,15 @@ public class completed extends AppCompatActivity {
                         }
 
                         if (matchList.isEmpty()) {
-                            Toast.makeText(completed.this, "No completed matches found", Toast.LENGTH_SHORT).show();
+                            emptyView.setVisibility(View.VISIBLE);
+                        } else {
+                            emptyView.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(completed.this, "Failed to load all matches", Toast.LENGTH_SHORT).show();
-                        Log.e("FirebaseError", error.getMessage());
+                        Toast.makeText(completed.this, "Failed to load matches", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -135,7 +151,6 @@ public class completed extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(completed.this, "Failed to load results", Toast.LENGTH_SHORT).show();
-                Log.e("FirebaseError", error.getMessage());
             }
         });
     }

@@ -2,6 +2,7 @@ package com.tournaments.gamerclash.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +48,16 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.holder> {
     private final HashMap<String, ValueEventListener> joinedRefListeners = new HashMap<>();
 
     String matchCategory;
+
+    public interface OnImageLoadedListener {
+        void onImageLoaded();
+    }
+
+    private OnImageLoadedListener imageLoadedListener;
+
+    public void setImageLoadedListener(OnImageLoadedListener listener) {
+        this.imageLoadedListener = listener;
+    }
 
     public myAdapter(ArrayList<Match_model> list, Context context, Set<String> joinedMatchIds, String category) {
         this.mContext = context;
@@ -74,14 +90,34 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.holder> {
 
         // ✅ IMAGE LOAD FROM URL (GLIDE)
         String imageUrl = model.getImage();
+        holder.matchImage.setAlpha(0f);
+
         if (imageUrl != null && !imageUrl.trim().isEmpty()) {
             Glide.with(mContext)
                     .load(imageUrl)
-                    .placeholder(R.drawable.logo)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
+                            holder.matchImage.setAlpha(1f);
+                            if (imageLoadedListener != null) imageLoadedListener.onImageLoaded();
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(@NonNull Drawable resource, Object model, @NonNull Target<Drawable> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                            holder.matchImage.animate().alpha(1f).setDuration(300).start();
+                            if (imageLoadedListener != null) imageLoadedListener.onImageLoaded();
+                            return false;
+                        }
+                    })
                     .error(R.drawable.logo)
                     .into(holder.matchImage);
         } else {
             holder.matchImage.setImageResource(R.drawable.logo);
+            holder.matchImage.setAlpha(1f);
+            if (imageLoadedListener != null) {
+                imageLoadedListener.onImageLoaded();
+            }
         }
 
         String matchId = model.getMatchid();

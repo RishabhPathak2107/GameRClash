@@ -1,7 +1,9 @@
 package com.tournaments.gamerclash;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +31,8 @@ public class upcoming extends AppCompatActivity {
     myAdapter adapter;
     ArrayList<Match_model> joinedUpcomingMatches;
     Set<String> joinedMatchIds = new HashSet<>();
+    SwipeRefreshLayout swipeRefresh;
+    TextView emptyView;
     Toolbar toolbar;
     ImageView back_btn;
 
@@ -58,6 +63,14 @@ public class upcoming extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewUpcoming);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        swipeRefresh = findViewById(R.id.swipeRefresh);
+        emptyView = findViewById(R.id.emptyView);
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            loadJoinedMatches();
+            swipeRefresh.setRefreshing(false);
+        });
+
         joinedUpcomingMatches = new ArrayList<>();
         loadJoinedMatches();
     }
@@ -65,7 +78,7 @@ public class upcoming extends AppCompatActivity {
     private void loadJoinedMatches() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            emptyView.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -87,12 +100,17 @@ public class upcoming extends AppCompatActivity {
                     }
                 }
 
-                fetchAllMatches();
+                if (joinedMatchIds.isEmpty()) {
+                    joinedUpcomingMatches.clear();
+                    updateAdapter();
+                } else {
+                    fetchAllMatches();
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(upcoming.this, "Failed to load joined matches", Toast.LENGTH_SHORT).show();
+                emptyView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -101,7 +119,7 @@ public class upcoming extends AppCompatActivity {
         joinedUpcomingMatches.clear();
 
         if (joinedMatchIds.isEmpty()) {
-            Toast.makeText(this, "No joined matches found", Toast.LENGTH_SHORT).show();
+            updateAdapter();
             return;
         }
 
@@ -181,13 +199,9 @@ public class upcoming extends AppCompatActivity {
                                 });
                     } else {
                         if (++doneCount[0] == total) {
-                            if (!tempList.isEmpty()) {
-                                joinedUpcomingMatches.clear();
-                                joinedUpcomingMatches.addAll(tempList);
-                                updateAdapter();
-                            } else {
-                                Toast.makeText(upcoming.this, "No valid joined matches found", Toast.LENGTH_SHORT).show();
-                            }
+                            joinedUpcomingMatches.clear();
+                            joinedUpcomingMatches.addAll(tempList);
+                            updateAdapter();
                         }
                     }
                 }
@@ -195,17 +209,22 @@ public class upcoming extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(upcoming.this, "Failed to load matches category", Toast.LENGTH_SHORT).show();
+                emptyView.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void updateAdapter() {
         if (!joinedUpcomingMatches.isEmpty()) {
+            emptyView.setVisibility(View.GONE);
             adapter = new myAdapter(joinedUpcomingMatches, upcoming.this, joinedMatchIds, "All");
             recyclerView.setAdapter(adapter);
         } else {
-            Toast.makeText(this, "No valid joined matches found", Toast.LENGTH_SHORT).show();
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null) {
+                joinedUpcomingMatches.clear();
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 }

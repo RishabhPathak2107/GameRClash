@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recycleView"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BR_MatchFragment">
-</androidx.recyclerview.widget.RecyclerView>
+    android:background="@color/colorDarkBlue">
+
+    <!-- RecyclerView is VISIBLE so items bind and Glide loads images in background -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:padding="0dp"/>
+
+    <!-- Skeleton Layout sits ON TOP of RecyclerView hiding it until images are ready -->
+    <LinearLayout
+        android:id="@+id/skeletonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorDarkBlue"
+        android:visibility="visible">
+
+        <include layout="@layout/ff_match_skeleton" />
+        <include layout="@layout/ff_match_skeleton" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No matches found"
+        android:textColor="#94A3B8"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

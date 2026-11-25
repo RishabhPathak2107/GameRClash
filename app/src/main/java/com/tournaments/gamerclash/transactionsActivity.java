@@ -1,7 +1,9 @@
 package com.tournaments.gamerclash;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
@@ -22,7 +25,6 @@ import com.tournaments.gamerclash.Models.txnModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -31,6 +33,8 @@ public class transactionsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<txnModel> txnList;
     private txnAdapter adapter;
+    private SwipeRefreshLayout swipeRefresh;
+    private TextView emptyView;
     Toolbar toolbar;
     ImageView back_btn;
 
@@ -59,9 +63,17 @@ public class transactionsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.transactionRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        swipeRefresh = findViewById(R.id.swipeRefresh);
+        emptyView = findViewById(R.id.emptyView);
+
         txnList = new ArrayList<>();
         adapter = new txnAdapter(this,txnList);
         recyclerView.setAdapter(adapter);
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            loadTransactions();
+            swipeRefresh.setRefreshing(false);
+        });
 
         loadTransactions();
     }
@@ -74,7 +86,7 @@ public class transactionsActivity extends AppCompatActivity {
                 .getReference("transactions")
                 .child(userId);
 
-        txnRef.addValueEventListener(new ValueEventListener() {
+        txnRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 txnList.clear();
@@ -85,6 +97,12 @@ public class transactionsActivity extends AppCompatActivity {
                     }
                 }
                 adapter.notifyDataSetChanged();
+
+                if (txnList.isEmpty()) {
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    emptyView.setVisibility(View.GONE);
+                }
 
                 // Check and award first add money bonus (one-time only)
                 checkAndAwardFirstAddMoneyBonus(userId, txnList);

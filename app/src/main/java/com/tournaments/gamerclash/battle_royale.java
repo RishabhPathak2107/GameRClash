@@ -1,8 +1,6 @@
 package com.tournaments.gamerclash;
-import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +26,6 @@ public class battle_royale extends AppCompatActivity {
     ViewPager viewPager;
     Toolbar toolbar;
     TextView toolbarTitle;
-    Dialog loadingDialog;
     ImageView back_btn;
 
     @Override
@@ -49,9 +46,6 @@ public class battle_royale extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbarTitle = findViewById(R.id.toolbar_title);
         toolbarTitle.setText(title);
-
-        // Show loading dialog
-        showLoadingDialog();
 
         // Setup ViewPager + TabLayout
         UnifiedViewPagerAdapter adapter = new UnifiedViewPagerAdapter(getSupportFragmentManager(), category);
@@ -91,48 +85,15 @@ public class battle_royale extends AppCompatActivity {
 
         // Firebase check
         FirebaseDatabase.getInstance().getReference("Matches").child(category)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        hideLoadingDialog();
-
-                        boolean hasTrue = false;
-                        for (DataSnapshot matchSnap : snapshot.getChildren()) {
-                            Boolean isActive = matchSnap.getValue(Boolean.class);
-                            if (Boolean.TRUE.equals(isActive)) {
-                                hasTrue = true;
-                                break;
-                            }
-                        }
-
-                        if (!hasTrue) {
-                            Toast.makeText(battle_royale.this, "No matches available!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {}
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        hideLoadingDialog();
                         Toast.makeText(battle_royale.this, "Failed to load matches!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-    }
-
-    private void showLoadingDialog() {
-        loadingDialog = new Dialog(this);
-        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        loadingDialog.setContentView(R.layout.custom_progress_layout2);
-        loadingDialog.setCancelable(false);
-        if (loadingDialog.getWindow() != null) {
-            loadingDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-        loadingDialog.show();
-    }
-
-    private void hideLoadingDialog() {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
     }
 }

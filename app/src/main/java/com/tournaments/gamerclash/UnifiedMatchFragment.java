@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -28,6 +29,8 @@ public class UnifiedMatchFragment extends Fragment {
     ArrayList<Match_model> list;
     Set<String> joinedMatchIds = new HashSet<>();
     String category = "Battle Royale";
+    View skeletonLayout;
+    TextView emptyView;
 
     private final Handler handler = new Handler();
     private int lastCheckedMinute = -1;
@@ -44,6 +47,8 @@ public class UnifiedMatchFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        skeletonLayout = view.findViewById(R.id.skeletonLayout);
+        emptyView = view.findViewById(R.id.emptyView);
         list = new ArrayList<>();
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -124,7 +129,10 @@ public class UnifiedMatchFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (skeletonLayout != null) skeletonLayout.setVisibility(View.GONE);
+                if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -148,11 +156,26 @@ public class UnifiedMatchFragment extends Fragment {
     private void updateAdapter() {
         if (getActivity() == null) return;
 
+        if (list.isEmpty()) {
+            if (skeletonLayout != null) skeletonLayout.setVisibility(View.GONE);
+            if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+            if (recyclerView != null) recyclerView.setVisibility(View.GONE);
+        } else {
+            if (emptyView != null) emptyView.setVisibility(View.GONE);
+        }
+
         if (mAdapter == null) {
             mAdapter = new myAdapter(list, getContext(), joinedMatchIds, category);
+            mAdapter.setImageLoadedListener(() -> {
+                if (skeletonLayout != null) skeletonLayout.setVisibility(View.GONE);
+                if (recyclerView != null) recyclerView.setVisibility(View.VISIBLE);
+            });
             recyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
+            if (!list.isEmpty() && skeletonLayout != null && skeletonLayout.getVisibility() == View.GONE) {
+                if (recyclerView != null) recyclerView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

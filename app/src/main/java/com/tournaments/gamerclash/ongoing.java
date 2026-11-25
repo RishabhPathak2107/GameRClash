@@ -2,7 +2,9 @@ package com.tournaments.gamerclash;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +32,8 @@ public class ongoing extends AppCompatActivity {
     myAdapter mAdapter;
     ArrayList<Match_model> ongoingMatches = new ArrayList<>();
     Set<String> joinedMatchIds = new HashSet<>();
+    SwipeRefreshLayout swipeRefresh;
+    TextView emptyView;
     Toolbar toolbar;
     ImageView back_btn;
 
@@ -57,6 +62,14 @@ public class ongoing extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        swipeRefresh = findViewById(R.id.swipeRefresh);
+        emptyView = findViewById(R.id.emptyView);
+
+        swipeRefresh.setOnRefreshListener(() -> {
+            fetchJoinedMatchIds();
+            swipeRefresh.setRefreshing(false);
+        });
 
         fetchJoinedMatchIds();
     }
@@ -149,7 +162,9 @@ public class ongoing extends AppCompatActivity {
                                 }
 
                                 if (ongoingMatches.isEmpty()) {
-                                    Toast.makeText(ongoing.this, "No ongoing matches found", Toast.LENGTH_SHORT).show();
+                                    emptyView.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyView.setVisibility(View.GONE);
                                 }
                             }
 
